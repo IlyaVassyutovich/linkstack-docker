@@ -28,6 +28,20 @@ jobs:
           zipBall: false
           extract: true
       
+      - name: 🎯 Set up Docker
+        uses: docker/setup-docker-action@v4
+        with:
+          daemon-config: |
+            {
+              "debug": true,
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
+
+      - name: 🖥 Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
       - name: 🔓 Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -39,4 +53,5 @@ jobs:
         with:
           context: .
           push: true
+          platforms: "linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7"
           tags: "${{ vars.DOCKERHUB_USERNAME }}/linkstack:${{ env.LS_RELEASE_TAG }}"
