@@ -1,8 +1,13 @@
 FROM alpine:3.22.1
-LABEL maintainer="JulianPrieber"
-LABEL description="LinkStack Docker"
+
+
+ARG VERSION="0.0.0-dev"
+ARG VCS_REF="unknown"
+ARG CREATED="1970-01-01T00:00:00Z"
+
 
 EXPOSE 80 443
+
 
 # Setup apache and php
 RUN apk --no-cache --update \
@@ -60,3 +65,16 @@ HEALTHCHECK CMD curl -f http://localhost -A "HealthCheck" || exit 1
 WORKDIR /htdocs
 
 CMD ["docker-entrypoint.sh"]
+
+
+LABEL maintainer="IlyaVassyutovich"
+LABEL description="LinkStack Docker"
+
+LABEL org.opencontainers.image.title="LinkStack"
+LABEL org.opencontainers.image.description="A simple to set up docker variant of LinkStack"
+LABEL org.opencontainers.image.url="https://hub.docker.com/r/ilyavassyutovich/linkstack"
+LABEL org.opencontainers.image.source="https://github.com/IlyaVassyutovich/linkstack-docker"
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
+LABEL org.opencontainers.image.version=$VERSION
+LABEL org.opencontainers.image.revision=$VCS_REF
+LABEL org.opencontainers.image.created=$CREATED
