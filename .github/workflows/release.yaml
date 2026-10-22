@@ -13,14 +13,14 @@ jobs:
     env:
       DOCKER_BUILDKIT: 1
       LS_RELEASE_TAG: "v4.8.8"
-      LS_CONTAINER_IMAGE_RELEASE_TAG: "4.8.8-1"
+      LS_CONTAINER_IMAGE_RELEASE_TAG: "4.8.8-2"
 
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: Compute build metadata
-        id: meta
+      - name: 📅 Compute build metadata
+        id: meta-build
         run: |
           echo "created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
           echo "version=$LS_CONTAINER_IMAGE_RELEASE_TAG" >> $GITHUB_OUTPUT
@@ -55,6 +55,12 @@ jobs:
           username: "${{ vars.DOCKERHUB_USERNAME }}"
           password: "${{ secrets.DOCKERHUB_TOKEN }}"
 
+      - name: 📜 Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ vars.DOCKERHUB_USERNAME }}/linkstack
+
       - name: 🌐 Build and push
         uses: docker/build-push-action@v7
         with:
@@ -62,8 +68,10 @@ jobs:
           push: true
           platforms: "linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7"
           tags: |
-            ${{ vars.DOCKERHUB_USERNAME }}/linkstack:${{ steps.meta.outputs.version }}
+            ${{ vars.DOCKERHUB_USERNAME }}/linkstack:${{ steps.meta-build.outputs.version }}
+            ${{ steps.meta.outputs.tags }}
           build-args: |
-            VERSION=${{ steps.meta.outputs.version }}
+            VERSION=${{ steps.meta-build.outputs.version }}
             VCS_REF=${{ github.sha }}
-            CREATED=${{ steps.meta.outputs.created }}
+            CREATED=${{ steps.meta-build.outputs.created }}
+          labels: ${{ steps.meta.outputs.labels }}
