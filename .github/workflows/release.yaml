@@ -8,6 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      attestations: write
+      id-token: write
     timeout-minutes: 10
     name: 🐳 Build and Push Docker Image
     env:
