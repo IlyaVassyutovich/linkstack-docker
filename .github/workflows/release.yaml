@@ -17,7 +17,7 @@ jobs:
     env:
       DOCKER_BUILDKIT: 1
       LS_RELEASE_TAG: "v4.8.8"
-      LS_CONTAINER_IMAGE_RELEASE_TAG: "4.8.8-2"
+      LS_CONTAINER_IMAGE_RELEASE_TAG: "4.8.8-3"
 
     steps:
       - name: 📥 Checkout

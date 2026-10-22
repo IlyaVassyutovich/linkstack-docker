@@ -1,4 +1,5 @@
-FROM alpine:3.23.4
+# https://hub.docker.com/layers/library/alpine/3.24.3
+FROM alpine@sha256:b3413572228e34bd1c9245f5565e6cd127005655e8a7899aef33d8e83255c9e6
 
 
 ARG VERSION="0.0.0-dev"
