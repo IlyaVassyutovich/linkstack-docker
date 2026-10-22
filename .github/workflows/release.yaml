@@ -12,8 +12,8 @@ jobs:
     name: 🐳 Build and Push Docker Image
     env:
       DOCKER_BUILDKIT: 1
-      LS_RELEASE_TAG: "v4.8.4"
-      LS_CONTAINER_IMAGE_RELEASE_TAG: "4.8.4-r1"
+      LS_RELEASE_TAG: "v4.8.8"
+      LS_CONTAINER_IMAGE_RELEASE_TAG: "4.8.8-1"
 
     steps:
       - name: 📥 Checkout
