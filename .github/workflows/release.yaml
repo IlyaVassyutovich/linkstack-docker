@@ -55,13 +55,8 @@ jobs:
           username: "${{ vars.DOCKERHUB_USERNAME }}"
           password: "${{ secrets.DOCKERHUB_TOKEN }}"
 
-      - name: 📜 Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v6
-        with:
-          images: ${{ vars.DOCKERHUB_USERNAME }}/linkstack
-
       - name: 🌐 Build and push
+        id: build-push
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -69,9 +64,15 @@ jobs:
           platforms: "linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7"
           tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/linkstack:${{ steps.meta-build.outputs.version }}
-            ${{ steps.meta.outputs.tags }}
           build-args: |
             VERSION=${{ steps.meta-build.outputs.version }}
             VCS_REF=${{ github.sha }}
             CREATED=${{ steps.meta-build.outputs.created }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: 👮‍♂️ Generate artifact attestation
+        uses: actions/attest@v4
+        with:
+          subject-name: index.docker.io/${{ vars.DOCKERHUB_USERNAME }}/linkstack
+          subject-digest: ${{ steps.build-push.outputs.digest }}
+          push-to-registry: true
